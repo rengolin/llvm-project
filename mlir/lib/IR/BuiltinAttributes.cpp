@@ -1006,20 +1006,28 @@ DenseElementsAttr DenseElementsAttr::get(ShapedType type,
   return DenseStringElementsAttr::get(type, values);
 }
 
+static Type getScalarElementType(Type type) {
+  return llvm::TypeSwitch<Type, Type>(type)
+            .Case([&](ShapedType t) { return t.getElementType(); })
+            .Default([](auto t) { return t; });
+}
+
 /// Constructs a dense integer elements attribute from an array of APInt
 /// values. Each APInt value is expected to have the same bitwidth as the
 /// element type of 'type'.
 DenseElementsAttr DenseElementsAttr::get(ShapedType type,
                                          ArrayRef<APInt> values) {
-  assert(type.getElementType().isIntOrIndex());
+  auto scalarElmType = getScalarElementType(type.getElementType());
+  assert(scalarElmType.isIntOrIndex());
   assert(hasSameElementsOrSplat(type, values));
-  size_t storageBitWidth = getDenseElementStorageWidth(type.getElementType());
+  size_t storageBitWidth = getDenseElementStorageWidth(scalarElmType);
   return DenseIntOrFPElementsAttr::getRaw(type, storageBitWidth, values);
 }
 DenseElementsAttr DenseElementsAttr::get(ShapedType type,
                                          ArrayRef<std::complex<APInt>> values) {
-  ComplexType complex = llvm::cast<ComplexType>(type.getElementType());
-  assert(llvm::isa<IntegerType>(complex.getElementType()));
+  auto scalarElmType = getScalarElementType(type.getElementType());
+  ComplexType complex = llvm::cast<ComplexType>(scalarElmType);
+  assert(llvm::isa<FloatType>(complex.getElementType()));
   assert(hasSameElementsOrSplat(type, values));
   size_t storageBitWidth = getDenseElementStorageWidth(complex) / 2;
   ArrayRef<APInt> intVals(reinterpret_cast<const APInt *>(values.data()),
@@ -1032,15 +1040,17 @@ DenseElementsAttr DenseElementsAttr::get(ShapedType type,
 // element type of 'type'.
 DenseElementsAttr DenseElementsAttr::get(ShapedType type,
                                          ArrayRef<APFloat> values) {
-  assert(llvm::isa<FloatType>(type.getElementType()));
+  auto scalarElmType = getScalarElementType(type.getElementType());
+  assert(llvm::isa<FloatType>(scalarElmType));
   assert(hasSameElementsOrSplat(type, values));
-  size_t storageBitWidth = getDenseElementStorageWidth(type.getElementType());
+  size_t storageBitWidth = getDenseElementStorageWidth(scalarElmType);
   return DenseIntOrFPElementsAttr::getRaw(type, storageBitWidth, values);
 }
 DenseElementsAttr
 DenseElementsAttr::get(ShapedType type,
                        ArrayRef<std::complex<APFloat>> values) {
-  ComplexType complex = llvm::cast<ComplexType>(type.getElementType());
+  auto scalarElmType = getScalarElementType(type.getElementType());
+  ComplexType complex = llvm::cast<ComplexType>(scalarElmType);
   assert(llvm::isa<FloatType>(complex.getElementType()));
   assert(hasSameElementsOrSplat(type, values));
   ArrayRef<APFloat> apVals(reinterpret_cast<const APFloat *>(values.data()),
@@ -1061,7 +1071,8 @@ DenseElementsAttr::getFromRawBuffer(ShapedType type, ArrayRef<char> rawBuffer) {
 bool DenseElementsAttr::isValidRawBuffer(ShapedType type,
                                          ArrayRef<char> rawBuffer,
                                          bool &detectedSplat) {
-  size_t storageWidth = getDenseElementStorageWidth(type.getElementType());
+  auto scalarElmType = getScalarElementType(type.getElementType());
+  size_t storageWidth = getDenseElementStorageWidth(scalarElmType);
   size_t rawBufferWidth = rawBuffer.size() * CHAR_BIT;
   int64_t numElements = type.getNumElements();
 

@@ -573,6 +573,12 @@ DenseElementsAttr TensorLiteralParser::getAttr(SMLoc loc, ShapedType type) {
     isComplex = true;
   }
 
+  // Handle recursive shaped types
+  // FIXME: Handle more than just ranked tensors?
+  if (RankedTensorType tensorTy = dyn_cast<RankedTensorType>(eltType)) {
+    eltType = tensorTy.getElementType();
+  }
+
   // Handle integer and index types.
   if (eltType.isIntOrIndex()) {
     std::vector<APInt> intValues;
