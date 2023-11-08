@@ -315,6 +315,10 @@ checkTensorElementType(function_ref<InFlightDiagnostic()> emitError,
 
 /// Return true if the specified element type is ok in a tensor.
 bool TensorType::isValidElementType(Type type) {
+  // Allowing tensor of tensors only on ranked tensors and the element type
+  // must also be a ranked tensor. FIXME: How to test the container type here?
+  if (llvm::isa<RankedTensorType>(type))
+    return true;
   // Note: Non standard/builtin types are allowed to exist within tensor
   // types. Dialects are expected to verify that tensor types have a valid
   // element type within that dialect.
