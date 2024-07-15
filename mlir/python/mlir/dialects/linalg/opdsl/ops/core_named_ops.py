@@ -389,15 +389,27 @@ def matmul(
     B=TensorDef(T2, S.K, S.N),
     C=TensorDef(U, S.M, S.N, output=True),
     cast=TypeFnAttrDef(default=TypeFn.cast_signed),
+    map_a=IndexAttrDef(S.A0, S.A1, default=[0, 1]),
+    map_b=IndexAttrDef(S.B0, S.B1, default=[0, 1]),
 ):
     """Performs a matrix multiplication of two 2D inputs.
 
     Numeric casting is performed on the operands to the inner multiply, promoting
     them to the same data type as the accumulator/output.
+
+    Relayout (transpose) possible if altering the map of either A or B or both.
     """
     domain(D.m, D.n, D.k)
     implements(ContractionOpInterface)
-    C[D.m, D.n] += cast(U, A[D.m, D.k]) * cast(U, B[D.k, D.n])
+    
+    # Define the correct index from the relayout map
+    dims_a = (D.m, D.k)
+    l_a = (dims_a[S.A0], dims_a[S.A1])
+    dims_b = (D.k, D.n)
+    l_b = (dims_b[S.B0], dims_b[S.B1])
+
+    # Use relayout dims
+    C[D.m, D.n] += cast(U, A[l_a[0], l_a[1]]) * cast(U, B[l_b[0], l_b[1]])
 
 
 @linalg_structured_op
