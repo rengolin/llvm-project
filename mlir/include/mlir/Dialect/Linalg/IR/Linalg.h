@@ -172,6 +172,9 @@ public:
                     ValueRange outputs, Attribute cast,
                     ArrayRef<NamedAttribute> attributes = {});
 
+  /// Checks if the affine map is the expected one for this operation
+  static bool isExpectedAffineMaps(Attribute attr);
+
   static bool classof(Operation *op);
 };
 
@@ -200,6 +203,9 @@ public:
                     TypeRange resultTensorTypes, ValueRange inputs,
                     ValueRange outputs, Attribute cast,
                     ArrayRef<NamedAttribute> attributes = {});
+
+  /// Checks if the affine map is the expected one for this operation
+  static bool isExpectedAffineMaps(Attribute attr);
 
   static bool classof(Operation *op);
 };
@@ -231,6 +237,9 @@ public:
                     ValueRange outputs, Attribute cast,
                     ArrayRef<NamedAttribute> attributes = {});
 
+  /// Checks if the affine map is the expected one for this operation
+  static bool isExpectedAffineMaps(Attribute attr);
+
   static bool classof(Operation *op);
 };
 
@@ -260,6 +269,9 @@ public:
                     TypeRange resultTensorTypes, ValueRange inputs,
                     ValueRange outputs, Attribute cast,
                     ArrayRef<NamedAttribute> attributes = {});
+
+  /// Checks if the affine map is the expected one for this operation
+  static bool isExpectedAffineMaps(Attribute attr);
 
   static bool classof(Operation *op);
 };
