@@ -17,6 +17,73 @@ include "mlir/Interfaces/DestinationStyleOpInterface.td"
 include "mlir/Interfaces/IndexingMapOpInterface.td"
 include "mlir/IR/OpBase.td"
 
+// The 'LinalgElementwiseOpInterface' provides access to the
+// 'ElementwiseOpInterface'.
+def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
+  let description = [{
+   A Linalg elementwise operation is defined in general terms:
+     1. Has 1-3 input and 1 output shapes.
+     2. Has no reduction dimensions.
+     3. Has only projected permutation indexing maps.
+     4. its body computes `op(in0, ...) -> out` only.
+     where `op` represents scalar unary/binary/ternary operations that may
+     change the type (e.g. for mixed-precision, cast, extension, truncation).
+   As a consequence, when vectorization of such an op occurs, the only special
+   behavior is that the (unique) OpType is vectorized into a
+   `vector.op`, if available. All other ops are handled in a generic fashion.
+  }];
+  let cppNamespace = "::mlir::linalg";
+  let verify = [{ return detail::verifyElementwiseInterface($_op); }];
+  let verifyWithRegions = 1;
+  let methods = [
+    InterfaceMethod<
+    /*desc=*/"Returns the n-th operand.",
+    /*retTy=*/"Value",
+    /*methodName=*/"operand",
+    /*args=*/("unsigned":$ins),
+    /*methodBody=*/[{
+      return $_op.getOperation()->getOperand(ins);
+    }]>,
+    InterfaceMethod<
+    /*desc=*/"Returns the operation type.",
+    /*retTy=*/"ElementwiseKindAttr",
+    /*methodName=*/"operationType",
+    /*args=*/(),
+    /*methodBody=*/[{
+      return $_op.getOperation()->getAttribute("kind")
+          .cast<ElementwiseKindAttr>();
+    }]>,
+    InterfaceMethod<
+    /*desc=*/"Returns true if the op is unary.",
+    /*retTy=*/"bool",
+    /*methodName=*/"isUnary",
+    /*args=*/(),
+    /*methodBody=*/[{
+      return $_op.getOperation()->getAttribute("kind")
+          .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Unary;
+    }]>,
+    InterfaceMethod<
+    /*desc=*/"Returns true if the op is binary.",
+    /*retTy=*/"bool",
+    /*methodName=*/"isBinary",
+    /*args=*/(),
+    /*methodBody=*/[{
+      return $_op.getOperation()->getAttribute("kind")
+          .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Binary;
+    }]>,
+    InterfaceMethod<
+    /*desc=*/"Returns true if the op is ternary.",
+    /*retTy=*/"bool",
+    /*methodName=*/"isTernary",
+    /*args=*/(),
+    /*methodBody=*/[{
+      return $_op.getOperation()->getAttribute("kind")
+          .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Ternary;
+    }]>,
+
+  ];
+}
+
 // The 'LinalgContractionOpInterface' provides access to the
 // 'ContractionOpInterface'.
 def LinalgContractionOpInterface : OpInterface<"ContractionOpInterface"> {
