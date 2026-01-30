@@ -67,6 +67,10 @@ FailureOr<ContractionDimensions> inferContractionDims(LinalgOp linalgOp);
 FailureOr<ContractionDimensions>
 inferContractionDims(ArrayRef<AffineMap> indexingMaps);
 
+/// Checks whether `linalgOp` conforms to ElementwiseOpInterface.
+// TODO: embed within `isa<ElementwiseOpInterface>` if possible / natural.
+bool isaElementwiseOpInterface(LinalgOp linalgOp);
+
 /// Checks whether `linalgOp` conforms to ContractionOpInterface.
 // TODO: embed within `isa<ContractionOpInterface>` if possible / natural.
 bool isaContractionOpInterface(LinalgOp linalgOp);
@@ -151,6 +155,17 @@ std::optional<Value> isaFillOpInterface(GenericOp genericOp);
 
 namespace detail {
 
+/// Result of matching a Linalg generic against the predicates of it being a
+/// element-wise operation.
+enum class MatchElementwiseResult;
+
+/// Checks whether `op` conforms to ElementwiseOpInterface.
+MatchElementwiseResult isElementwiseInterfaceImpl(Operation *op);
+
+/// Returns the error message corresponding to the elementwise checking return
+/// code.
+StringRef getMatchElementwiseMessage(MatchElementwiseResult res);
+
 /// Returns true if the block contains a contraction of the following form:
 ///
 ///   %0 = <elemwise>(permutation-of(cu(block-argument-0),
@@ -206,6 +221,9 @@ StringRef getMatchConvolutionMessage(MatchConvolutionResult res);
 
 /// Verify that `op` conforms to ContractionOpInterface.
 LogicalResult verifyContractionInterface(Operation *op);
+
+/// Verify that `op` conforms to ElementwiseOpInterface.
+LogicalResult verifyElementwiseInterface(Operation *op);
 
 /// Verify that `op` conforms to the ConvolutionOpInterface.
 LogicalResult verifyConvolutionInterface(Operation *op);

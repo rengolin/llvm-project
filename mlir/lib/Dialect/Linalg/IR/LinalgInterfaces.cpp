@@ -219,7 +219,7 @@ linalg::isaTransposeOpInterface(GenericOp op) {
 //===----------------------------------------------------------------------===//
 // Elementwise Single Unary/Binary-OpInterface implementation
 //===----------------------------------------------------------------------===//
-static bool isaElemwiseSingleUnaryOrBinaryOpInterface(linalg::GenericOp op,
+static bool isaElemwiseSingleUnaryOrBinaryOpInterface(linalg::LinalgOp op,
                                                       unsigned arity) {
   // Check all loops are parallel.
   if (!op.isAllParallelLoops() || op.getNumLoops() < 1)
@@ -239,7 +239,7 @@ static bool isaElemwiseSingleUnaryOrBinaryOpInterface(linalg::GenericOp op,
   // as resulting from producer-consumer fusion. Here, we restrict to two ops in
   // the body, where the first is the elementwise single op and the second a
   // yield.
-  Block *body = op.getBody();
+  Block *body = op.getBlock();
   if (body->getOperations().size() != 2)
     return false;
 
@@ -272,6 +272,91 @@ bool linalg::isaElemwiseSingleBinaryOpInterface(linalg::GenericOp op) {
   OpOperand *inputOpOperand1 = op.getDpsInputOperand(1);
   return !(!op.payloadUsesValueFromOperand(inputOpOperand0) ||
            !op.payloadUsesValueFromOperand(inputOpOperand1));
+}
+
+namespace mlir::linalg::detail {
+enum class MatchElementwiseResult {
+  Success = 0,
+  NotLinalgOp,
+  WrongNumOperands,
+  Reduction,
+  NotProjectedPermutations,
+  NotSimpleRegion
+};
+} // namespace mlir::linalg::detail
+
+mlir::linalg::detail::MatchElementwiseResult
+mlir::linalg::detail::isElementwiseInterfaceImpl(Operation *op) {
+  auto ewOp = dyn_cast<linalg::ElementwiseOp>(op);
+  if (ewOp)
+    return MatchElementwiseResult::Success;
+  auto linalgOp = dyn_cast<linalg::LinalgOp>(op);
+  if (!linalgOp)
+    return MatchElementwiseResult::NotLinalgOp;
+  if (linalgOp.getNumDpsInputs() < 1 || linalgOp.getNumDpsInputs() > 3 || linalgOp.getNumDpsInits() != 1)
+    return MatchElementwiseResult::WrongNumOperands;
+  auto mapRange = linalgOp.getIndexingMapsArray();
+  if (linalgOp.getNumReductionLoops() != 0)
+    return MatchElementwiseResult::Reduction;
+  if (llvm::any_of(mapRange,
+                   [](AffineMap m) { return !m.isProjectedPermutation(); }))
+    return MatchElementwiseResult::NotProjectedPermutations;
+  // TODO: make this generic on any arith/math
+  // clang-format off
+  if (!::isaElemwiseSingleUnaryOrBinaryOpInterface(linalgOp, 1)) {
+    return MatchElementwiseResult::NotSimpleRegion;
+  }
+  // clang-format on
+
+  return MatchElementwiseResult::Success;
+}
+
+StringRef
+mlir::linalg::detail::getMatchElementwiseMessage(MatchElementwiseResult res) {
+  switch (res) {
+  case MatchElementwiseResult::NotLinalgOp:
+    return "expected a LinalgOp";
+  case MatchElementwiseResult::WrongNumOperands:
+    return "expected op with 1-3 inputs and 1 output";
+  case MatchElementwiseResult::Reduction:
+    return "expected no reductions";
+  case MatchElementwiseResult::NotProjectedPermutations:
+    return "expected indexing maps to be projected permutations";
+  case MatchElementwiseResult::NotSimpleRegion:
+    return "expected elementwise + yield ops only in the body";
+  case MatchElementwiseResult::Success:
+    return "";
+  }
+  llvm_unreachable("unhandled MatchElementwiseResult case");
+}
+
+bool mlir::linalg::isaElementwiseOpInterface(LinalgOp linalgOp) {
+  if (!linalgOp)
+    return false;
+  Operation *op = linalgOp.getOperation();
+  return isa<ElementwiseOpInterface>(op) ||
+         (mlir::linalg::detail::isElementwiseInterfaceImpl(op) ==
+          mlir::linalg::detail::MatchElementwiseResult::Success);
+}
+
+/// Verify that a LinalgOp `op` is a contraction.
+/// A Linalg contraction is defined in general terms:
+///   1. Has 2 input and 1 output shapes.
+///   2. Has at least one reduction dimension.
+///   3. Has only projected permutation indexing maps.
+///   4. its body computes `u5(u1(c) + u2(u3(a) * u4(b)))` on some field
+///   (AddOpType, MulOpType), where u1, u2, u3, u4 and u5 represent scalar unary
+///   operations that may change the type (e.g. for mixed-precision).
+/// As a consequence, when vectorization of such an op occurs, the only special
+/// behavior is that the (unique) MulOpType is vectorized into a
+/// `vector.contract`. All other ops are handled in a generic fashion.
+/// In the future, we may wish to allow more input arguments and elementwise and
+/// constant operations that do not involve the reduction dimension(s).
+LogicalResult mlir::linalg::detail::verifyElementwiseInterface(Operation *op) {
+  auto res = isElementwiseInterfaceImpl(op);
+  if (res != MatchElementwiseResult::Success)
+    return op->emitError(getMatchElementwiseMessage(res));
+  return success();
 }
 
 //===----------------------------------------------------------------------===//

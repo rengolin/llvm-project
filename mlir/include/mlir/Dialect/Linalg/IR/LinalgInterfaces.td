@@ -40,7 +40,7 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
     /*desc=*/"Returns the n-th operand.",
     /*retTy=*/"Value",
     /*methodName=*/"operand",
-    /*args=*/("unsigned":$ins),
+    /*args=*/(ins "unsigned":$ins),
     /*methodBody=*/[{
       return $_op.getOperation()->getOperand(ins);
     }]>,
@@ -48,7 +48,7 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
     /*desc=*/"Returns the operation type.",
     /*retTy=*/"ElementwiseKindAttr",
     /*methodName=*/"operationType",
-    /*args=*/(),
+    /*args=*/(ins),
     /*methodBody=*/[{
       return $_op.getOperation()->getAttribute("kind")
           .cast<ElementwiseKindAttr>();
@@ -57,7 +57,7 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
     /*desc=*/"Returns true if the op is unary.",
     /*retTy=*/"bool",
     /*methodName=*/"isUnary",
-    /*args=*/(),
+    /*args=*/(ins),
     /*methodBody=*/[{
       return $_op.getOperation()->getAttribute("kind")
           .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Unary;
@@ -66,7 +66,7 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
     /*desc=*/"Returns true if the op is binary.",
     /*retTy=*/"bool",
     /*methodName=*/"isBinary",
-    /*args=*/(),
+    /*args=*/(ins),
     /*methodBody=*/[{
       return $_op.getOperation()->getAttribute("kind")
           .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Binary;
@@ -75,7 +75,7 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
     /*desc=*/"Returns true if the op is ternary.",
     /*retTy=*/"bool",
     /*methodName=*/"isTernary",
-    /*args=*/(),
+    /*args=*/(ins),
     /*methodBody=*/[{
       return $_op.getOperation()->getAttribute("kind")
           .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Ternary;
