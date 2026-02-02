@@ -339,19 +339,17 @@ bool mlir::linalg::isaElementwiseOpInterface(LinalgOp linalgOp) {
           mlir::linalg::detail::MatchElementwiseResult::Success);
 }
 
-/// Verify that a LinalgOp `op` is a contraction.
-/// A Linalg contraction is defined in general terms:
-///   1. Has 2 input and 1 output shapes.
-///   2. Has at least one reduction dimension.
-///   3. Has only projected permutation indexing maps.
-///   4. its body computes `u5(u1(c) + u2(u3(a) * u4(b)))` on some field
-///   (AddOpType, MulOpType), where u1, u2, u3, u4 and u5 represent scalar unary
-///   operations that may change the type (e.g. for mixed-precision).
-/// As a consequence, when vectorization of such an op occurs, the only special
-/// behavior is that the (unique) MulOpType is vectorized into a
-/// `vector.contract`. All other ops are handled in a generic fashion.
-/// In the future, we may wish to allow more input arguments and elementwise and
-/// constant operations that do not involve the reduction dimension(s).
+/// Verify that a LinalgOp `op` is elementwise.
+///   A Linalg elementwise operation is defined in general terms:
+///     1. Has 1-3 input and 1 output shapes.
+///     2. Has no reduction dimensions.
+///     3. Has only projected permutation indexing maps.
+///     4. its body computes `op(in0, ...) -> out` only.
+///     where `op` represents scalar unary/binary/ternary operations that may
+///     change the type (e.g. for mixed-precision, cast, extension, truncation).
+///   As a consequence, when vectorization of such an op occurs, the only special
+///   behavior is that the (unique) OpType is vectorized into a
+///   `vector.op`, if available. All other ops are handled in a generic fashion.
 LogicalResult mlir::linalg::detail::verifyElementwiseInterface(Operation *op) {
   auto res = isElementwiseInterfaceImpl(op);
   if (res != MatchElementwiseResult::Success)

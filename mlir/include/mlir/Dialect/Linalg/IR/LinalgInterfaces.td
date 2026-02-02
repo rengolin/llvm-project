@@ -46,41 +46,20 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
     }]>,
     InterfaceMethod<
     /*desc=*/"Returns the operation type.",
-    /*retTy=*/"ElementwiseKindAttr",
+    /*retTy=*/"::mlir::linalg::ElementwiseKind",
     /*methodName=*/"operationType",
     /*args=*/(ins),
     /*methodBody=*/[{
-      return $_op.getOperation()->getAttribute("kind")
-          .cast<ElementwiseKindAttr>();
+      return $_op.getOperation()->getAttribute("kind").getValue();
     }]>,
     InterfaceMethod<
-    /*desc=*/"Returns true if the op is unary.",
-    /*retTy=*/"bool",
-    /*methodName=*/"isUnary",
+    /*desc=*/"Returns the operation arity.",
+    /*retTy=*/"int",
+    /*methodName=*/"operationArity",
     /*args=*/(ins),
     /*methodBody=*/[{
-      return $_op.getOperation()->getAttribute("kind")
-          .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Unary;
+      return $_op.getOperation()->getNumOperands();
     }]>,
-    InterfaceMethod<
-    /*desc=*/"Returns true if the op is binary.",
-    /*retTy=*/"bool",
-    /*methodName=*/"isBinary",
-    /*args=*/(ins),
-    /*methodBody=*/[{
-      return $_op.getOperation()->getAttribute("kind")
-          .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Binary;
-    }]>,
-    InterfaceMethod<
-    /*desc=*/"Returns true if the op is ternary.",
-    /*retTy=*/"bool",
-    /*methodName=*/"isTernary",
-    /*args=*/(ins),
-    /*methodBody=*/[{
-      return $_op.getOperation()->getAttribute("kind")
-          .cast<ElementwiseKindAttr>().getValue() == ElementwiseKind::Ternary;
-    }]>,
-
   ];
 }
 

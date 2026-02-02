@@ -27,6 +27,7 @@
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 #include "mlir/Interfaces/TilingInterface.h"
 #include "mlir/Interfaces/ViewLikeInterface.h"
+#include "mlir/Dialect/Linalg/IR/LinalgEnums.h"
 
 #include "llvm/ADT/STLFunctionalExtras.h"
 
@@ -97,12 +98,6 @@ OpFoldResult createFoldedDimOp(OpBuilder &b, Location loc, Value val,
 //===----------------------------------------------------------------------===//
 
 #include "mlir/Dialect/Linalg/IR/LinalgOpsDialect.h.inc"
-
-//===----------------------------------------------------------------------===//
-// Linalg Enums
-//===----------------------------------------------------------------------===//
-
-#include "mlir/Dialect/Linalg/IR/LinalgOpsEnums.h.inc"
 
 namespace mlir {
 namespace linalg {

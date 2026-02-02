@@ -24,6 +24,7 @@
 #include "mlir/Interfaces/InferTypeOpInterface.h"
 #include "mlir/Interfaces/ViewLikeInterface.h"
 #include "mlir/Support/RawOstreamExtras.h"
+#include "mlir/Dialect/Linalg/IR/LinalgEnums.h"
 
 namespace mlir {
 namespace linalg {
