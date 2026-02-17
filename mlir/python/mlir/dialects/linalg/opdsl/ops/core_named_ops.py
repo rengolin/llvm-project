@@ -30,6 +30,7 @@ def exp(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.exp(I[None])
 
 
@@ -42,6 +43,7 @@ def log(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.log(I[None])
 
 
@@ -54,6 +56,7 @@ def abs(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.abs(I[None])
 
 
@@ -66,6 +69,7 @@ def ceil(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.ceil(I[None])
 
 
@@ -78,6 +82,7 @@ def floor(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.floor(I[None])
 
 
@@ -90,6 +95,7 @@ def negf(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.negf(I[None])
 
 
@@ -102,6 +108,7 @@ def reciprocal(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.reciprocal(I[None])
 
 
@@ -114,6 +121,7 @@ def round(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.round(I[None])
 
 
@@ -126,6 +134,7 @@ def sqrt(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.sqrt(I[None])
 
 
@@ -138,6 +147,7 @@ def rsqrt(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.rsqrt(I[None])
 
 
@@ -150,6 +160,7 @@ def square(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.square(I[None])
 
 
@@ -162,6 +173,7 @@ def tanh(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.tanh(I[None])
 
 
@@ -174,6 +186,7 @@ def erf(
 
     No numeric casting is performed on the input operand.
     """
+    implements(ElementwiseOpInterface)
     O[None] = UnaryFn.erf(I[None])
 
 
@@ -193,6 +206,7 @@ def add(
     a `linalg.broadcast` + `linalg.add` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.add(lhs[None], rhs[None])
 
 
@@ -212,6 +226,7 @@ def sub(
     a `linalg.broadcast` + `linalg.sub` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.sub(lhs[None], rhs[None])
 
 
@@ -231,6 +246,7 @@ def mul(
     a `linalg.broadcast` + `linalg.mul` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.mul(lhs[None], rhs[None])
 
 
@@ -250,6 +266,7 @@ def div(
     a `linalg.broadcast` + `linalg.div` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.div(lhs[None], rhs[None])
 
 
@@ -270,6 +287,7 @@ def div_unsigned(
     a `linalg.broadcast` + `linalg.div` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.div_unsigned(lhs[None], rhs[None])
 
 
@@ -289,6 +307,7 @@ def max(
     a `linalg.broadcast` + `linalg.max` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.max_signed(lhs[None], rhs[None])
 
 
@@ -308,6 +327,7 @@ def min(
     a `linalg.broadcast` + `linalg.min` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.min_signed(lhs[None], rhs[None])
 
 
@@ -329,6 +349,7 @@ def powf(
     a `linalg.broadcast` + `linalg.powf` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = BinaryFn.powf(lhs[None], rhs[None])
 
 
@@ -349,6 +370,7 @@ def select(
     a `linalg.broadcast` + `linalg.select` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
     """
+    implements(ElementwiseOpInterface)
     O[None] = TernaryFn.select(cond[None], lhs[None], rhs[None])
 
 

@@ -29,8 +29,8 @@ def LinalgElementwiseOpInterface : OpInterface<"ElementwiseOpInterface"> {
      where `op` represents scalar unary/binary/ternary operations that may
      change the type (e.g. for mixed-precision, cast, extension, truncation).
    As a consequence, when vectorization of such an op occurs, the only special
-   behavior is that the (unique) OpType is vectorized into a
-   `vector.op`, if available. All other ops are handled in a generic fashion.
+   behavior is that the (unique) OpType is vectorized into am operation on
+   `vector` types, if available. All other ops are handled in a generic fashion.
   }];
   let cppNamespace = "::mlir::linalg";
   let verify = [{ return detail::verifyElementwiseInterface($_op); }];

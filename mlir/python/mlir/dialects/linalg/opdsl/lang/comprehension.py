@@ -800,6 +800,7 @@ class OpInterfaceDef:
         self.cpp_name = cpp_name
 
 
+ElementwiseOpInterface = OpInterfaceDef("LinalgElementwiseOpInterface")
 ContractionOpInterface = OpInterfaceDef("LinalgContractionOpInterface")
 ConvolutionOpInterface = OpInterfaceDef("LinalgConvolutionOpInterface")
 FillOpInterface = OpInterfaceDef("LinalgFillOpInterface")
