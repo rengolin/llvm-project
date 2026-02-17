@@ -51,8 +51,6 @@ metadata: !LinalgOpMetadata
     Applies exp(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -88,8 +86,6 @@ metadata: !LinalgOpMetadata
     Applies log(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -125,8 +121,6 @@ metadata: !LinalgOpMetadata
     Applies abs(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -162,8 +156,6 @@ metadata: !LinalgOpMetadata
     Applies ceil(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -199,8 +191,6 @@ metadata: !LinalgOpMetadata
     Applies floor(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -236,8 +226,6 @@ metadata: !LinalgOpMetadata
     Applies negf(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -273,8 +261,6 @@ metadata: !LinalgOpMetadata
     Applies reciprocal(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -310,8 +296,6 @@ metadata: !LinalgOpMetadata
     Applies round(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -347,8 +331,6 @@ metadata: !LinalgOpMetadata
     Applies sqrt(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -384,8 +366,6 @@ metadata: !LinalgOpMetadata
     Applies rsqrt(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -421,8 +401,6 @@ metadata: !LinalgOpMetadata
     Applies square(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -458,8 +436,6 @@ metadata: !LinalgOpMetadata
     Applies tanh(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -495,8 +471,6 @@ metadata: !LinalgOpMetadata
     Applies erf(x) elementwise.
 
     No numeric casting is performed on the input operand.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -538,8 +512,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.add` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -589,8 +561,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.sub` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -640,8 +610,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.mul` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -691,8 +659,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.div` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -743,8 +709,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.div` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -794,8 +758,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.max` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -845,8 +807,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.min` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -898,8 +858,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.powf` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
@@ -949,8 +907,6 @@ metadata: !LinalgOpMetadata
     passes can take that into account when lowering this code. For example,
     a `linalg.broadcast` + `linalg.select` sequence can be lowered to a
     `linalg.generic` with different affine maps for the two operands.
-  implements:
-  - LinalgElementwiseOpInterface
 structured_op: !LinalgStructuredOpConfig
   args:
   - !LinalgOperandDefConfig
