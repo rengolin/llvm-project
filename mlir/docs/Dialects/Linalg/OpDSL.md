@@ -24,7 +24,7 @@ installed MLIR package, if available, to avoid building.
 
 ```shell
 # Dump the `core_named_ops.py` module as YAML.
-python -m mlir.dialects.linalg.opdsl.dump_oplib.ops.core_named_ops
+python -m mlir.dialects.linalg.opdsl.dump_oplib .ops.core_named_ops
 ```
 
 Alternatively, run the `$PWD/build/bin/update_core_linalg_named_ops.sh` script,
