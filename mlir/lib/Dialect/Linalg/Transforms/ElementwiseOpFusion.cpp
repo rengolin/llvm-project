@@ -25,6 +25,7 @@
 #include "mlir/IR/PatternMatch.h"
 #include "mlir/Support/LLVM.h"
 #include "mlir/Transforms/GreedyPatternRewriteDriver.h"
+#include "mlir/Transforms/Passes.h"
 #include "mlir/Transforms/RegionUtils.h"
 #include "llvm/ADT/SmallVectorExtras.h"
 #include <optional>
@@ -2503,10 +2504,8 @@ struct LinalgElementwiseOpFusionPass
     tensor::populateBubbleUpExpandShapePatterns(patterns);
 
     // General canonicalization patterns.
-    affine::AffineApplyOp::getCanonicalizationPatterns(patterns, context);
-    GenericOp::getCanonicalizationPatterns(patterns, context);
-    tensor::ExpandShapeOp::getCanonicalizationPatterns(patterns, context);
-    tensor::CollapseShapeOp::getCanonicalizationPatterns(patterns, context);
+    CanonicalizationPatternList<affine::AffineApplyOp, tensor::ExpandShapeOp,
+                                tensor::CollapseShapeOp>::insert(patterns);
     context->getLoadedDialect<LinalgDialect>()->getCanonicalizationPatterns(
         patterns);
 
