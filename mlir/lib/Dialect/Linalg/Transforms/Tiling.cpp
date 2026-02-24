@@ -25,6 +25,7 @@
 #include "mlir/IR/AffineMap.h"
 #include "mlir/IR/ValueRange.h"
 #include "mlir/Transforms/FoldUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/STLExtras.h"
 #include <utility>
 
@@ -825,44 +826,6 @@ mlir::linalg::tileLinalgOp(RewriterBase &b, LinalgOp op,
   return failure();
 }
 
-namespace {
-/// Helper classes for type list expansion.
-/// TODO: Move this to a common header, so all dialects, passes and
-/// transforms can utilize this method to compose canonicalization
-/// patterns.
-template <typename... OpTypes>
-class CanonicalizationPatternList;
-
-template <>
-class CanonicalizationPatternList<> {
-public:
-  static void insert(RewritePatternSet &patterns) {}
-};
-
-template <typename OpTy, typename... OpTypes>
-class CanonicalizationPatternList<OpTy, OpTypes...> {
-public:
-  static void insert(RewritePatternSet &patterns) {
-    OpTy::getCanonicalizationPatterns(patterns, patterns.getContext());
-    CanonicalizationPatternList<OpTypes...>::insert(patterns);
-  }
-};
-
-/// TODO: Move this into `getCanonicalizationPattern` and do the same for all
-/// dialects, so that we don't need this hack to also get the operations'
-/// canonicalization patterns per dialect.
-static void
-populateLinalgCanonicalizationPatterns(RewritePatternSet &patterns) {
-  auto *ctx = patterns.getContext();
-  ctx->getLoadedDialect<LinalgDialect>()->getCanonicalizationPatterns(patterns);
-
-  CanonicalizationPatternList<
-#define GET_OP_LIST
-#include "mlir/Dialect/Linalg/IR/LinalgStructuredOps.cpp.inc"
-      >::insert(patterns);
-}
-} // namespace
-
 void mlir::linalg::populateLinalgTilingCanonicalizationPatterns(
     RewritePatternSet &patterns) {
   // Extra patterns from other dialects that we want to register for tiling
@@ -875,5 +838,6 @@ void mlir::linalg::populateLinalgTilingCanonicalizationPatterns(
       tensor::PadOp>::insert(patterns);
 
   // Linalg's own patterns
-  populateLinalgCanonicalizationPatterns(patterns);
+  auto *ctx = patterns.getContext();
+  ctx->getLoadedDialect<LinalgDialect>()->getCanonicalizationPatterns(patterns);
 }

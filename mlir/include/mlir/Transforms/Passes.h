@@ -51,6 +51,28 @@ class GreedyRewriteConfig;
 #define GEN_PASS_DECL_TOPOLOGICALSORT
 #include "mlir/Transforms/Passes.h.inc"
 
+/// Allows adding cannicalization patterns to a set based on individual
+/// operations. This can be used either by dialect canonicalization passes
+/// (to add their own operations' patterns) or by a custom pass that needs
+/// a particular set of canonicalizations to run effectively.
+template <typename... OpTypes>
+class CanonicalizationPatternList;
+
+template <>
+class CanonicalizationPatternList<> {
+public:
+  static void insert(RewritePatternSet &patterns) {}
+};
+
+template <typename OpTy, typename... OpTypes>
+class CanonicalizationPatternList<OpTy, OpTypes...> {
+public:
+  static void insert(RewritePatternSet &patterns) {
+    OpTy::getCanonicalizationPatterns(patterns, patterns.getContext());
+    CanonicalizationPatternList<OpTypes...>::insert(patterns);
+  }
+};
+
 /// Creates an instance of the Canonicalizer pass, configured with default
 /// settings (which can be overridden by pass options on the command line).
 std::unique_ptr<Pass> createCanonicalizerPass();

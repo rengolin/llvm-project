@@ -36,6 +36,7 @@
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/Interfaces/InferTypeOpInterface.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
+#include "mlir/Transforms/Passes.h"
 
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/STLExtras.h"
@@ -6710,8 +6711,15 @@ Speculation::Speculatability BatchReduceMatmulOp::getSpeculatability() {
 
 void LinalgDialect::getCanonicalizationPatterns(
     RewritePatternSet &results) const {
+  // Manual rewrites
   results.add<EraseDeadLinalgOp, FoldTensorCastConsumerOp, FoldTensorCastPackOp,
               FoldTensorCastUnPackOp, InferStaticShapeOfOperands>(getContext());
+
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Linalg/IR/LinalgStructuredOps.cpp.inc"
+      >::insert(results);
 }
 
 Operation *LinalgDialect::materializeConstant(OpBuilder &builder,

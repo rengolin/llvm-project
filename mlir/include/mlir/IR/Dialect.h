@@ -66,11 +66,8 @@ public:
   /// These are represented with OpaqueType.
   bool allowsUnknownTypes() const { return unknownTypesAllowed; }
 
-  /// Register dialect-wide canonicalization patterns. This method should only
-  /// be used to register canonicalization patterns that do not conceptually
-  /// belong to any single operation in the dialect. (In that case, use the op's
-  /// canonicalizer.) E.g., canonicalization patterns for op interfaces should
-  /// be registered here.
+  /// Register dialect-wide canonicalization patterns, including operation
+  /// canonicalizations for all operations in the dialect.
   virtual void getCanonicalizationPatterns(RewritePatternSet &results) const {}
 
   /// Registered hook to materialize a single constant operation from a given
