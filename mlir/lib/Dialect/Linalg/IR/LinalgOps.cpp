@@ -6719,6 +6719,14 @@ void LinalgDialect::getCanonicalizationPatterns(
   if (registerOperationCanonicalization) {
     CanonicalizationPatternList<
 #define GET_OP_LIST
+#include "mlir/Dialect/Linalg/IR/LinalgOps.cpp.inc"
+        >::insert(results);
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Linalg/IR/LinalgRelayoutOps.cpp.inc"
+        >::insert(results);
+    CanonicalizationPatternList<
+#define GET_OP_LIST
 #include "mlir/Dialect/Linalg/IR/LinalgStructuredOps.cpp.inc"
         >::insert(results);
   }
