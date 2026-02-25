@@ -839,5 +839,7 @@ void mlir::linalg::populateLinalgTilingCanonicalizationPatterns(
 
   // Linalg's own patterns
   auto *ctx = patterns.getContext();
-  ctx->getLoadedDialect<LinalgDialect>()->getCanonicalizationPatterns(patterns);
+  bool registerOperationCanonicalization = true;
+  ctx->getLoadedDialect<LinalgDialect>()->getCanonicalizationPatterns(
+      patterns, registerOperationCanonicalization);
 }
