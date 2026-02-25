@@ -27,6 +27,7 @@
 #include "mlir/IR/OpImplementation.h"
 #include "mlir/IR/PatternMatch.h"
 #include "mlir/IR/TypeUtilities.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallVector.h"
 
@@ -1229,6 +1230,19 @@ LogicalResult DsAsyncBarrierArriveOp::verify() {
 
 LogicalResult DsBarrierArriveOp::verify() {
   return verifyDsBarrierOpCommon(*this);
+}
+
+//===----------------------------------------------------------------------===//
+// AMDGPUDialect
+//===----------------------------------------------------------------------===//
+
+void AMDGPUDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/AMDGPU/IR/AMDGPU.cpp.inc"
+      >::insert(results);
 }
 
 #define GET_OP_CLASSES

@@ -24,6 +24,7 @@
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/IR/Value.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/STLExtras.h"
 #include <numeric>
 
@@ -948,6 +949,19 @@ void SwitchOp::getCanonicalizationPatterns(RewritePatternSet &results,
       .add(&simplifyPassThroughSwitch)
       .add(&simplifySwitchFromSwitchOnSameCondition)
       .add(&simplifySwitchFromDefaultSwitchOnSameCondition);
+}
+
+//===----------------------------------------------------------------------===//
+// ControlFlowDialect
+//===----------------------------------------------------------------------===//
+
+void ControlFlowDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/ControlFlow/IR/ControlFlowOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

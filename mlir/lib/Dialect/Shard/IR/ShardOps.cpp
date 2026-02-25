@@ -25,6 +25,7 @@
 #include "mlir/Interfaces/ViewLikeInterface.h"
 #include "mlir/Support/LLVM.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallSet.h"
@@ -1530,6 +1531,19 @@ UpdateHaloOp::verifySymbolUses(SymbolTableCollection &symbolTable) {
   }
 
   return success();
+}
+
+//===----------------------------------------------------------------------===//
+// ShardDialect
+//===----------------------------------------------------------------------===//
+
+void ShardDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Shard/IR/ShardOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

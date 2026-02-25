@@ -36,6 +36,7 @@ def XeGPU_Dialect : Dialect {
 
     let useDefaultTypePrinterParser = true;
     let useDefaultAttributePrinterParser = true;
+    let hasCanonicalizer = 1;
 
     let extraClassDeclaration = [{
       /// Checks if the given shape can be evenly distributed based on the layout

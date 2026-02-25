@@ -29,6 +29,7 @@
 #include "llvm/Support/DebugLog.h"
 #include "llvm/Support/LogicalResult.h"
 #include "llvm/Support/MathExtras.h"
+#include "mlir/Transforms/Passes.h"
 #include <numeric>
 #include <optional>
 
@@ -5656,6 +5657,19 @@ void affine::AffineLinearizeIndexOp::getCanonicalizationPatterns(
     RewritePatternSet &patterns, MLIRContext *context) {
   patterns.add<CancelLinearizeOfDelinearizePortion, DropLinearizeLeadingZero,
                DropLinearizeUnitComponentsIfDisjointOrZero>(context);
+}
+
+//===----------------------------------------------------------------------===//
+// AffineDialect
+//===----------------------------------------------------------------------===//
+
+void AffineDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Affine/IR/AffineOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

@@ -15,6 +15,7 @@
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/Interfaces/ViewLikeInterface.h"
+#include "mlir/Transforms/Passes.h"
 
 #include "llvm/Support/Debug.h"
 
@@ -1217,5 +1218,19 @@ namespace mlir {
 #include <mlir/Dialect/XeGPU/IR/XeGPUAttrInterface.cpp.inc>
 } // namespace mlir
 #include <mlir/Dialect/XeGPU/IR/XeGPUEnums.cpp.inc>
+
+//===----------------------------------------------------------------------===//
+// XeGPUDialect
+//===----------------------------------------------------------------------===//
+
+void XeGPUDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include <mlir/Dialect/XeGPU/IR/XeGPU.cpp.inc>
+      >::insert(results);
+}
+
 #define GET_OP_CLASSES
 #include <mlir/Dialect/XeGPU/IR/XeGPU.cpp.inc>

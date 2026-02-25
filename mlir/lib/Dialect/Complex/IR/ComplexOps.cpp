@@ -11,6 +11,7 @@
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/IR/PatternMatch.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::complex;
@@ -406,6 +407,19 @@ OpFoldResult DivOp::fold(FoldAdaptor adaptor) {
     return getLhs();
 
   return {};
+}
+
+//===----------------------------------------------------------------------===//
+// ComplexDialect
+//===----------------------------------------------------------------------===//
+
+void ComplexDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Complex/IR/ComplexOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

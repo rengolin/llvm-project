@@ -34,6 +34,7 @@ def Shard_Dialect : Dialect {
   let useDefaultAttributePrinterParser = 1;
   let useDefaultTypePrinterParser = 1;
   let hasConstantMaterializer = 1;
+  let hasCanonicalizer = 1;
 }
 
 def Shard_GridAxis : I<16>;

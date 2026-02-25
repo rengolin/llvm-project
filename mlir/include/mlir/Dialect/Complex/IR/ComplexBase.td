@@ -23,6 +23,7 @@ def Complex_Dialect : Dialect {
   let dependentDialects = ["arith::ArithDialect"];
   let hasConstantMaterializer = 1;
   let useDefaultAttributePrinterParser = 1;
+  let hasCanonicalizer = 1;
 }
 
 //===----------------------------------------------------------------------===//

@@ -39,6 +39,7 @@
 #include "mlir/Interfaces/ValueBoundsOpInterface.h"
 #include "mlir/Support/LLVM.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallVector.h"
@@ -7994,6 +7995,19 @@ Value mlir::vector::selectPassthru(OpBuilder &builder, Value mask,
 
   return arith::SelectOp::create(builder, newValue.getLoc(), newValue.getType(),
                                  mask, newValue, passthru);
+}
+
+//===----------------------------------------------------------------------===//
+// VectorDialect
+//===----------------------------------------------------------------------===//
+
+void VectorDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Vector/IR/VectorOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

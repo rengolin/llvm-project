@@ -25,6 +25,7 @@
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallBitVector.h"
 #include "llvm/ADT/SmallVectorExtras.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::memref;
@@ -3938,6 +3939,19 @@ FailureOr<std::optional<SmallVector<Value>>>
 AtomicRMWOp::bubbleDownCasts(OpBuilder &builder) {
   return mlir::detail::bubbleDownInPlaceMemorySpaceCastImpl(getMemrefMutable(),
                                                             getResult());
+}
+
+//===----------------------------------------------------------------------===//
+// MemRefDialect
+//===----------------------------------------------------------------------===//
+
+void MemRefDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/MemRef/IR/MemRefOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

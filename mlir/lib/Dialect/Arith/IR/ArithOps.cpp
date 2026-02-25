@@ -30,6 +30,7 @@
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/TypeSwitch.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::arith;
@@ -2832,6 +2833,19 @@ Value mlir::arith::getReductionOp(AtomicRMWKind op, OpBuilder &builder,
 }
 
 //===----------------------------------------------------------------------===//
+//===----------------------------------------------------------------------===//
+// ArithDialect
+//===----------------------------------------------------------------------===//
+
+void ArithDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Arith/IR/ArithOps.cpp.inc"
+      >::insert(results);
+}
+
 // TableGen'd op method definitions
 //===----------------------------------------------------------------------===//
 

@@ -11,6 +11,7 @@
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinAttributes.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::mpi;
@@ -88,6 +89,19 @@ void mlir::mpi::CommRankOp::getCanonicalizationPatterns(
 void mlir::mpi::CommSizeOp::getCanonicalizationPatterns(
     mlir::RewritePatternSet &results, mlir::MLIRContext *context) {
   results.add<FoldSize>(context);
+}
+
+//===----------------------------------------------------------------------===//
+// MPIDialect
+//===----------------------------------------------------------------------===//
+
+void MPIDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/MPI/IR/MPIOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//

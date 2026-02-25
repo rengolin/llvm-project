@@ -14,6 +14,7 @@
 #include "mlir/Dialect/Tensor/IR/Tensor.h"
 #include "mlir/Dialect/Utils/VerificationUtils.h"
 #include "mlir/IR/Matchers.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/SmallVectorExtras.h"
 #include <optional>
 
@@ -1199,6 +1200,19 @@ void bufferization::populateDeallocOpCanonicalizationPatterns(
                DeallocRemoveDuplicateRetainedMemrefs, EraseEmptyDealloc,
                EraseAlwaysFalseDealloc, SkipExtractMetadataOfAlloc,
                RemoveAllocDeallocPairWhenNoOtherUsers>(context);
+}
+
+//===----------------------------------------------------------------------===//
+// BufferizationDialect
+//===----------------------------------------------------------------------===//
+
+void BufferizationDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results) const {
+  // Operation canonicalization patterns
+  CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Bufferization/IR/BufferizationOps.cpp.inc"
+      >::insert(results);
 }
 
 //===----------------------------------------------------------------------===//
