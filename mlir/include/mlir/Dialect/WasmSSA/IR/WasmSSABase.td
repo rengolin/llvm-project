@@ -20,6 +20,7 @@ def WasmSSA_Dialect : Dialect {
     modules in SSA form for easier manipulation.
   }];
   let useDefaultTypePrinterParser = true;
+  let hasCanonicalizer = 1;
 }
 
 #endif //WasmSSA_BASE

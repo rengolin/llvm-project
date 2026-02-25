@@ -26,9 +26,9 @@ def MLProgram_Dialect : Dialect {
     eventual goal, it is not guaranteed at this juncture. Given the early state,
     it is recommended to inquire further prior to using this dialect.
   }];
-
   let useDefaultAttributePrinterParser = 1;
   let useDefaultTypePrinterParser = 1;
+  let hasCanonicalizer = 1;
 }
 
 #endif // MLPROGRAM_BASE

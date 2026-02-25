@@ -20,6 +20,7 @@
 #include "mlir/IR/Value.h"
 #include "mlir/Interfaces/FunctionImplementation.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/MapVector.h"
 #include "llvm/ADT/STLExtras.h"
@@ -44,6 +45,16 @@ void FuncDialect::initialize() {
   declarePromisedInterface<ConvertToLLVMPatternInterface, FuncDialect>();
   declarePromisedInterfaces<bufferization::BufferizableOpInterface, CallOp,
                             FuncOp, ReturnOp>();
+}
+
+void FuncDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Func/IR/FuncOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 /// Materialize a single constant operation from a given attribute value with

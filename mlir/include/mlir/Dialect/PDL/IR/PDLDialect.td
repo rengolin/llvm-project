@@ -69,6 +69,7 @@ def PDL_Dialect : Dialect {
   let extraClassDeclaration = [{
     void registerTypes();
   }];
+  let hasCanonicalizer = 1;
 }
 
 #endif // MLIR_DIALECT_PDL_IR_PDLDIALECT

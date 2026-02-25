@@ -17,6 +17,7 @@
 #include "mlir/IR/OpImplementation.h"
 #include "mlir/IR/Operation.h"
 #include "mlir/Support/LLVM.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SetOperations.h"
 #include "llvm/ADT/StringExtras.h"
@@ -47,6 +48,16 @@ void IRDLDialect::initialize() {
 #define GET_ATTRDEF_LIST
 #include "mlir/Dialect/IRDL/IR/IRDLAttributes.cpp.inc"
       >();
+}
+
+void IRDLDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/IRDL/IR/IRDLOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

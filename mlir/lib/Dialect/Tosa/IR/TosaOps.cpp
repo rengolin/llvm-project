@@ -26,6 +26,7 @@
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/Interfaces/InferTypeOpInterface.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/APFloat.h"
 #include "llvm/ADT/SmallVectorExtras.h"
 #include "llvm/ADT/TypeSwitch.h"
@@ -175,6 +176,16 @@ void TosaDialect::initialize() {
       BitwiseNotOp, CeilOp, ClzOp, ExpOp, FloorOp, LogOp, LogicalNotOp,
       NegateOp, ReciprocalOp, RsqrtOp, SelectOp, EqualOp, GreaterOp,
       GreaterEqualOp, MatMulOp>();
+}
+
+void TosaDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Tosa/IR/TosaOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 Operation *TosaDialect::materializeConstant(OpBuilder &builder, Attribute value,

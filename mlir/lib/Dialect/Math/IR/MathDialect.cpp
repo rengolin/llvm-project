@@ -9,6 +9,7 @@
 #include "mlir/Conversion/ConvertToLLVM/ToLLVMInterface.h"
 #include "mlir/Dialect/Math/IR/Math.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::math;
@@ -35,4 +36,14 @@ void mlir::math::MathDialect::initialize() {
       >();
   addInterfaces<MathInlinerInterface>();
   declarePromisedInterface<ConvertToLLVMPatternInterface, MathDialect>();
+}
+
+void mlir::math::MathDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Math/IR/MathOps.cpp.inc"
+        >::insert(results);
+  }
 }

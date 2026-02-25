@@ -22,6 +22,7 @@ def Func_Dialect : Dialect {
   let name = "func";
   let cppNamespace = "::mlir::func";
   let hasConstantMaterializer = 1;
+  let hasCanonicalizer = 1;
 }
 
 // Base class for Func dialect ops.

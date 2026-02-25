@@ -10,6 +10,7 @@
 #include "mlir/Dialect/SMT/IR/SMTAttributes.h"
 #include "mlir/Dialect/SMT/IR/SMTOps.h"
 #include "mlir/Dialect/SMT/IR/SMTTypes.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace smt;
@@ -41,6 +42,16 @@ Operation *SMTDialect::materializeConstant(OpBuilder &builder, Attribute value,
   }
 
   return nullptr;
+}
+
+void SMTDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/SMT/IR/SMT.cpp.inc"
+        >::insert(results);
+  }
 }
 
 #include "mlir/Dialect/SMT/IR/SMTDialect.cpp.inc"

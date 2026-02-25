@@ -7,8 +7,10 @@
 //===----------------------------------------------------------------------===//
 
 #include "mlir/Dialect/Index/IR/IndexDialect.h"
+#include "mlir/Dialect/Index/IR/IndexOps.h"
 #include "mlir/Conversion/ConvertToLLVM/ToLLVMInterface.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::index;
@@ -34,6 +36,16 @@ void IndexDialect::initialize() {
   registerOperations();
   addInterfaces<IndexInlinerInterface>();
   declarePromisedInterface<ConvertToLLVMPatternInterface, IndexDialect>();
+}
+
+void IndexDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Index/IR/IndexOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

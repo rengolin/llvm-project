@@ -49,11 +49,10 @@ struct Canonicalizer : public impl::CanonicalizerBase<Canonicalizer> {
     config.setMaxNumRewrites(maxNumRewrites);
 
     RewritePatternSet owningPatterns(context);
+    bool registerOperationCanonicalization = true;
     for (auto *dialect : context->getLoadedDialects())
-      dialect->getCanonicalizationPatterns(owningPatterns);
-    // TODO: Remove this once all dialects add their own operations' patterns
-    for (RegisteredOperationName op : context->getRegisteredOperations())
-      op.getCanonicalizationPatterns(owningPatterns, context);
+      dialect->getCanonicalizationPatterns(owningPatterns,
+                                           registerOperationCanonicalization);
 
     patterns = std::make_shared<FrozenRewritePatternSet>(
         std::move(owningPatterns), disabledPatterns, enabledPatterns);

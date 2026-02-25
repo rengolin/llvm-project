@@ -26,6 +26,7 @@
 #include "mlir/Interfaces/ParallelCombiningOpInterface.h"
 #include "mlir/Interfaces/ValueBoundsOpInterface.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "mlir/Transforms/RegionUtils.h"
 #include "llvm/ADT/MapVector.h"
 #include "llvm/ADT/STLExtras.h"
@@ -3860,6 +3861,16 @@ void IndexSwitchOp::getCanonicalizationPatterns(RewritePatternSet &results,
       results, IndexSwitchOp::getOperationName());
   populateRegionBranchOpInterfaceInliningPattern(
       results, IndexSwitchOp::getOperationName());
+}
+
+void SCFDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/SCF/IR/SCFOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

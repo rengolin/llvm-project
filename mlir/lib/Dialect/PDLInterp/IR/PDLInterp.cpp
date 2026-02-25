@@ -10,6 +10,7 @@
 #include "mlir/Dialect/PDL/IR/PDLTypes.h"
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/Interfaces/FunctionImplementation.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::pdl_interp;
@@ -25,6 +26,16 @@ void PDLInterpDialect::initialize() {
 #define GET_OP_LIST
 #include "mlir/Dialect/PDLInterp/IR/PDLInterpOps.cpp.inc"
       >();
+}
+
+void PDLInterpDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/PDLInterp/IR/PDLInterpOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 template <typename OpT>

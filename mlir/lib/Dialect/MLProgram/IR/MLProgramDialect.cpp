@@ -9,6 +9,7 @@
 #include "mlir/Dialect/MLProgram/IR/MLProgram.h"
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/TypeSwitch.h"
 
 using namespace mlir;
@@ -59,4 +60,14 @@ void ml_program::MLProgramDialect::initialize() {
       >();
 
   addInterfaces<MLProgramInlinerInterface, MLProgramOpAsmDialectInterface>();
+}
+
+void ml_program::MLProgramDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/MLProgram/IR/MLProgramOps.cpp.inc"
+        >::insert(results);
+  }
 }

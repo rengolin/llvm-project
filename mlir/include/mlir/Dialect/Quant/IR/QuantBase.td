@@ -386,6 +386,7 @@ def Quant_Dialect : Dialect {
                 tensor<6x2x!quant.uniform<i8:f32:{0:3}, {{1.0}, {2.0}}>>
     ```
   }];
+  let hasCanonicalizer = 1;
   let cppNamespace = "::mlir::quant";
   let useDefaultTypePrinterParser = 1;
 }

@@ -16,6 +16,7 @@
 #include "mlir/IR/Types.h"
 #include "mlir/Interfaces/FunctionImplementation.h"
 #include "mlir/Support/LLVM.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/TypeSwitch.h"
@@ -1741,6 +1742,16 @@ ParseResult DoOp::parse(OpAsmParser &parser, OperationState &result) {
     bodyRegion->emplaceBlock();
 
   return parser.parseOptionalAttrDictWithKeyword(result.attributes);
+}
+
+void EmitCDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/EmitC/IR/EmitC.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

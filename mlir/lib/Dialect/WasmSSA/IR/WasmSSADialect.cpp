@@ -13,6 +13,7 @@
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/Support/LLVM.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::wasmssa;
@@ -35,4 +36,14 @@ void wasmssa::WasmSSADialect::initialize() {
 #define GET_TYPEDEF_LIST
 #include "mlir/Dialect/WasmSSA/IR/WasmSSAOpsTypes.cpp.inc"
       >();
+}
+
+void wasmssa::WasmSSADialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/WasmSSA/IR/WasmSSAOps.cpp.inc"
+        >::insert(results);
+  }
 }

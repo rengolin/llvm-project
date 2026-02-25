@@ -19,6 +19,7 @@
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/IR/Verifier.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/TypeSwitch.h"
 
@@ -40,6 +41,16 @@ void NVGPUDialect::initialize() {
 #define GET_OP_LIST
 #include "mlir/Dialect/NVGPU/IR/NVGPUOps.cpp.inc"
       >();
+}
+
+void NVGPUDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/NVGPU/IR/NVGPUOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 bool NVGPUDialect::isSharedMemoryAddressSpace(Attribute memorySpace) {

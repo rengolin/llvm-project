@@ -15,6 +15,7 @@
 #include "mlir/IR/Matchers.h"
 #include "mlir/Interfaces/DataLayoutInterfaces.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/ADT/TypeSwitch.h"
 
@@ -38,6 +39,16 @@ void PtrDialect::initialize() {
 #define GET_TYPEDEF_LIST
 #include "mlir/Dialect/Ptr/IR/PtrOpsTypes.cpp.inc"
       >();
+}
+
+void PtrDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Ptr/IR/PtrOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

@@ -10,6 +10,7 @@
 
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/Interfaces/FunctionImplementation.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/TypeSwitch.h"
 
 using namespace mlir;
@@ -26,6 +27,16 @@ void AsyncDialect::initialize() {
 #define GET_TYPEDEF_LIST
 #include "mlir/Dialect/Async/IR/AsyncOpsTypes.cpp.inc"
       >();
+}
+
+void AsyncDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Async/IR/AsyncOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

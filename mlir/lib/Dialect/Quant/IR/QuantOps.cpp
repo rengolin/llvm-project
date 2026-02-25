@@ -15,6 +15,7 @@
 #include "mlir/IR/PatternMatch.h"
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 
 #include "mlir/Dialect/Quant/IR/QuantOpsDialect.cpp.inc"
 
@@ -207,6 +208,16 @@ void QuantDialect::initialize() {
       >();
   detail::addBytecodeInterface(this);
   addInterfaces<QuantInlinerInterface>();
+}
+
+void QuantDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Quant/IR/QuantOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

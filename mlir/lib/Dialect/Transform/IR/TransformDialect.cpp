@@ -14,6 +14,7 @@
 #include "mlir/Dialect/Transform/Interfaces/TransformInterfaces.h"
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/IR/Verifier.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/SCCIterator.h"
 #include "llvm/ADT/TypeSwitch.h"
 
@@ -209,4 +210,15 @@ LogicalResult transform::TransformDialect::verifyOperationAttribute(
   }
   return emitError(op->getLoc())
          << "unknown attribute: " << attribute.getName();
+}
+
+void transform::TransformDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  // Operation canonicalization patterns
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Transform/IR/TransformOps.cpp.inc"
+        >::insert(results);
+  }
 }

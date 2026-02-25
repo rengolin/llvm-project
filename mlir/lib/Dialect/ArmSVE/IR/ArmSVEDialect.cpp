@@ -15,6 +15,7 @@
 #include "mlir/Dialect/Vector/IR/VectorOps.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/TypeUtilities.h"
+#include "mlir/Transforms/Passes.h"
 
 using namespace mlir;
 using namespace mlir::arm_sve;
@@ -49,4 +50,14 @@ void ArmSVEDialect::initialize() {
 #define GET_OP_LIST
 #include "mlir/Dialect/ArmSVE/IR/ArmSVE.cpp.inc"
       >();
+}
+
+void ArmSVEDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/ArmSVE/IR/ArmSVE.cpp.inc"
+        >::insert(results);
+  }
 }

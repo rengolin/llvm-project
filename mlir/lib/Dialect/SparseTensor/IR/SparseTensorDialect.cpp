@@ -23,6 +23,7 @@
 #include "mlir/IR/DialectImplementation.h"
 #include "mlir/IR/OpImplementation.h"
 #include "mlir/IR/PatternMatch.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/TypeSwitch.h"
 #include "llvm/Support/FormatVariadic.h"
 
@@ -2802,6 +2803,16 @@ void SparseTensorDialect::initialize() {
       bufferization::BufferizableOpInterface, ConcatenateOp, ConvertOp, LoadOp,
       NewOp, NumberOfEntriesOp, AssembleOp, DisassembleOp,
       ToCoordinatesBufferOp, ToCoordinatesOp, ToPositionsOp, ToValuesOp>();
+}
+
+void SparseTensorDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/SparseTensor/IR/SparseTensorOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 #define GET_OP_CLASSES

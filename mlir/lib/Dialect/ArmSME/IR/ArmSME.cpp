@@ -13,6 +13,7 @@
 #include "mlir/Dialect/ArmSME/IR/ArmSME.h"
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
 #include "mlir/IR/DialectImplementation.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/TypeSwitch.h"
 
 using namespace mlir;
@@ -59,4 +60,14 @@ void ArmSMEDialect::initialize() {
 #define GET_OP_LIST
 #include "mlir/Dialect/ArmSME/IR/ArmSMEIntrinsicOps.cpp.inc"
       >();
+}
+
+void ArmSMEDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/ArmSME/IR/ArmSMEIntrinsicOps.cpp.inc"
+        >::insert(results);
+  }
 }

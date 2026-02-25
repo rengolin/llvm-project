@@ -30,6 +30,7 @@ def ArmSVE_Dialect : Dialect {
   }];
 
   let dependentDialects = ["vector::VectorDialect"];
+  let hasCanonicalizer = 1;
 }
 
 //===----------------------------------------------------------------------===//

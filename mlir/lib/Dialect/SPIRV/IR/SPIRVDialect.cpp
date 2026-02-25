@@ -25,6 +25,7 @@
 #include "mlir/IR/MLIRContext.h"
 #include "mlir/Parser/Parser.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/Sequence.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/ADT/TypeSwitch.h"
@@ -138,6 +139,16 @@ void SPIRVDialect::initialize() {
   // Allow unknown operations because SPIR-V is extensible.
   allowUnknownOperations();
   declarePromisedInterface<gpu::TargetAttrInterface, TargetEnvAttr>();
+}
+
+void SPIRVDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/SPIRV/IR/SPIRVOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 std::string SPIRVDialect::getAttributeName(Decoration decoration) {

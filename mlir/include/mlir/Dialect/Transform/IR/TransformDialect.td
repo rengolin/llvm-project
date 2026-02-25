@@ -17,6 +17,7 @@ def Transform_Dialect : Dialect {
 
   let name = "transform";
   let cppNamespace = "::mlir::transform";
+  let hasCanonicalizer = 1;
 
   let hasOperationAttrVerify = 1;
   let useDefaultAttributePrinterParser = 1;

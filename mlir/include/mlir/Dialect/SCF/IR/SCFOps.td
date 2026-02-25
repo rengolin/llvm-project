@@ -41,6 +41,7 @@ def SCF_Dialect : Dialect {
   }];
 
   let dependentDialects = ["arith::ArithDialect"];
+  let hasCanonicalizer = 1;
 }
 
 // Base class for SCF dialect ops.

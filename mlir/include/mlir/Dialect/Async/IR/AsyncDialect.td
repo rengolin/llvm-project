@@ -29,7 +29,7 @@ def AsyncDialect : Dialect {
   }];
 
   let useDefaultTypePrinterParser = 1;
-
+  let hasCanonicalizer = 1;
   let extraClassDeclaration = [{
     /// The name of a unit attribute on funcs that are allowed to have a
     /// blocking async.runtime.await ops. In absence of this attribute the

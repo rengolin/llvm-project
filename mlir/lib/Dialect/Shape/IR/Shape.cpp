@@ -22,6 +22,7 @@
 #include "mlir/IR/TypeUtilities.h"
 #include "mlir/Interfaces/FunctionImplementation.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/SetOperations.h"
 #include "llvm/ADT/SmallVectorExtras.h"
 #include "llvm/ADT/TypeSwitch.h"
@@ -2056,6 +2057,16 @@ void ReduceOp::print(OpAsmPrinter &p) {
   p << ' ';
   p.printRegion(getRegion());
   p.printOptionalAttrDict((*this)->getAttrs());
+}
+
+void ShapeDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/Shape/IR/ShapeOps.cpp.inc"
+        >::insert(results);
+  }
 }
 
 #define GET_OP_CLASSES
