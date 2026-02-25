@@ -8002,12 +8002,14 @@ Value mlir::vector::selectPassthru(OpBuilder &builder, Value mask,
 //===----------------------------------------------------------------------===//
 
 void VectorDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/Vector/IR/VectorOps.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

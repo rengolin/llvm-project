@@ -96,12 +96,14 @@ void mlir::mpi::CommSizeOp::getCanonicalizationPatterns(
 //===----------------------------------------------------------------------===//
 
 void MPIDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/MPI/IR/MPIOps.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

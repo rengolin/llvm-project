@@ -1207,12 +1207,14 @@ void bufferization::populateDeallocOpCanonicalizationPatterns(
 //===----------------------------------------------------------------------===//
 
 void BufferizationDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/Bufferization/IR/BufferizationOps.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

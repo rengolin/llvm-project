@@ -6710,16 +6710,18 @@ Speculation::Speculatability BatchReduceMatmulOp::getSpeculatability() {
 //===----------------------------------------------------------------------===//
 
 void LinalgDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
   // Manual rewrites
   results.add<EraseDeadLinalgOp, FoldTensorCastConsumerOp, FoldTensorCastPackOp,
               FoldTensorCastUnPackOp, InferStaticShapeOfOperands>(getContext());
 
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/Linalg/IR/LinalgStructuredOps.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 Operation *LinalgDialect::materializeConstant(OpBuilder &builder,

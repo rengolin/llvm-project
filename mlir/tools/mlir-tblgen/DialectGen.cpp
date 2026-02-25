@@ -152,7 +152,8 @@ static const char *const typeParserDecl = R"(
 static const char *const canonicalizerDecl = R"(
   /// Register canonicalization patterns.
   void getCanonicalizationPatterns(
-      ::mlir::RewritePatternSet &results) const override;
+      ::mlir::RewritePatternSet &results,
+      bool registerOperationCanonicalization = false) const override;
 )";
 
 /// The code block for the constant materializer hook.

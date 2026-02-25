@@ -2838,12 +2838,15 @@ Value mlir::arith::getReductionOp(AtomicRMWKind op, OpBuilder &builder,
 //===----------------------------------------------------------------------===//
 
 void ArithDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results,
+    bool registerOperationCanonicalization) const {
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/Arith/IR/ArithOps.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 // TableGen'd op method definitions

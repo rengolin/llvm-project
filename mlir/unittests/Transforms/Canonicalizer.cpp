@@ -59,7 +59,9 @@ struct TestDialect : public Dialect {
     allowUnknownOperations();
   }
 
-  void getCanonicalizationPatterns(RewritePatternSet &results) const override {
+  void getCanonicalizationPatterns(
+      RewritePatternSet &results,
+      bool registerOperationCanonicalization) const override {
     results.add<DisabledPattern, EnabledPattern>(results.getContext());
   }
 };

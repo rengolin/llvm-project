@@ -448,7 +448,7 @@ dialectCanonicalizationPattern(TestDialectCanonicalizerOp op,
 }
 
 void TestDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
   results.add(&dialectCanonicalizationPattern);
 }
 

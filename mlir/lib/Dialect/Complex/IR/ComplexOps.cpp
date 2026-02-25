@@ -414,12 +414,15 @@ OpFoldResult DivOp::fold(FoldAdaptor adaptor) {
 //===----------------------------------------------------------------------===//
 
 void ComplexDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results,
+    bool registerOperationCanonicalization) const {
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/Complex/IR/ComplexOps.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 //===----------------------------------------------------------------------===//

@@ -296,7 +296,9 @@ the `getCanonicalizationPatterns` method on the dialect, which has the form:
 
 ```c++
 /// Return the canonicalization patterns for this dialect:
-void MyDialect::getCanonicalizationPatterns(RewritePatternSet &results) const;
+void MyDialect::getCanonicalizationPatterns(
+      RewritePatternSet &results,
+      bool registerOperationCanonicalization = false) const;
 ```
 
 See the documentation for [Canonicalization in MLIR](../Canonicalization.md) for

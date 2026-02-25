@@ -1237,12 +1237,14 @@ LogicalResult DsBarrierArriveOp::verify() {
 //===----------------------------------------------------------------------===//
 
 void AMDGPUDialect::getCanonicalizationPatterns(
-    RewritePatternSet &results) const {
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
   // Operation canonicalization patterns
-  CanonicalizationPatternList<
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
 #define GET_OP_LIST
 #include "mlir/Dialect/AMDGPU/IR/AMDGPU.cpp.inc"
-      >::insert(results);
+        >::insert(results);
+  }
 }
 
 #define GET_OP_CLASSES

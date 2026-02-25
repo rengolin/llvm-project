@@ -67,8 +67,11 @@ public:
   bool allowsUnknownTypes() const { return unknownTypesAllowed; }
 
   /// Register dialect-wide canonicalization patterns, including operation
-  /// canonicalizations for all operations in the dialect.
-  virtual void getCanonicalizationPatterns(RewritePatternSet &results) const {}
+  /// canonicalizations for all operations in the dialect, if the
+  /// `registerOperationCanonicalization` flag is true (default false).
+  virtual void getCanonicalizationPatterns(
+      RewritePatternSet &results,
+      bool registerOperationCanonicalization = false) const {}
 
   /// Registered hook to materialize a single constant operation from a given
   /// attribute value with the desired resultant type. This method should use
