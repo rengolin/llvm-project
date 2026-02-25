@@ -502,10 +502,10 @@ void transform::ApplyPatternsOp::build(
 void transform::ApplyCanonicalizationPatternsOp::populatePatterns(
     RewritePatternSet &patterns) {
   MLIRContext *ctx = patterns.getContext();
+  bool registerOperationCanonicalization = true;
   for (Dialect *dialect : ctx->getLoadedDialects())
-    dialect->getCanonicalizationPatterns(patterns);
-  for (RegisteredOperationName op : ctx->getRegisteredOperations())
-    op.getCanonicalizationPatterns(patterns, ctx);
+    dialect->getCanonicalizationPatterns(patterns,
+                                         registerOperationCanonicalization);
 }
 
 //===----------------------------------------------------------------------===//
