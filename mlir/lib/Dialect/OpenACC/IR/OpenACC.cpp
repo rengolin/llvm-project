@@ -22,6 +22,7 @@
 #include "mlir/IR/SymbolTable.h"
 #include "mlir/Support/LLVM.h"
 #include "mlir/Transforms/DialectConversion.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/SmallSet.h"
 #include "llvm/ADT/TypeSwitch.h"
 #include "llvm/Support/LogicalResult.h"
@@ -5203,4 +5204,14 @@ mlir::SymbolRefAttr mlir::acc::getRecipe(mlir::Operation *accOp) {
               [&](auto entry) { return entry.getRecipeAttr(); })
           .Default([&](mlir::Operation *) { return mlir::SymbolRefAttr{}; })};
   return recipe;
+}
+
+void OpenACCDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/OpenACC/OpenACCOps.cpp.inc"
+        >::insert(results);
+  }
 }

@@ -21,6 +21,7 @@ def OpenACC_Dialect : Dialect {
   let useDefaultAttributePrinterParser = 1;
   let useDefaultTypePrinterParser = 1;
   let cppNamespace = "::mlir::acc";
+  let hasCanonicalizer = 1;
   let dependentDialects = ["::mlir::memref::MemRefDialect",
                            "::mlir::LLVM::LLVMDialect",
                            "::mlir::gpu::GPUDialect"];

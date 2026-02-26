@@ -22,6 +22,7 @@
 #include "mlir/IR/OperationSupport.h"
 #include "mlir/IR/SymbolTable.h"
 #include "mlir/Interfaces/FoldInterfaces.h"
+#include "mlir/Transforms/Passes.h"
 
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/PostOrderIterator.h"
@@ -4621,6 +4622,16 @@ static void printAffinityClause(OpAsmPrinter &p, Operation *op,
     if (i)
       p << ", ";
     p << affinityVars[i] << " : " << affinityTypes[i];
+  }
+}
+
+void OpenMPDialect::getCanonicalizationPatterns(
+    RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/OpenMP/OpenMPOps.cpp.inc"
+        >::insert(results);
   }
 }
 
