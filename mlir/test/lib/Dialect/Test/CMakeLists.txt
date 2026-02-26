@@ -34,6 +34,7 @@ set(LLVM_TARGET_DEFINITIONS TestOps.td)
 mlir_tablegen(TestOpsDialect.h.inc -gen-dialect-decls -dialect=test)
 mlir_tablegen(TestOpsDialect.cpp.inc -gen-dialect-defs -dialect=test)
 mlir_tablegen(TestPatterns.inc -gen-rewriters)
+mlir_tablegen(TestOpsDefs.cpp.inc -gen-op-defs)
 add_public_tablegen_target(MLIRTestOpsIncGen)
 
 set(LLVM_TARGET_DEFINITIONS TestOpsSyntax.td)

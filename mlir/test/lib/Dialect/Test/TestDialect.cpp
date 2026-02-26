@@ -30,6 +30,7 @@
 #include "mlir/Support/LLVM.h"
 #include "mlir/Transforms/FoldUtils.h"
 #include "mlir/Transforms/InliningUtils.h"
+#include "mlir/Transforms/Passes.h"
 #include "llvm/ADT/STLFunctionalExtras.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/StringExtras.h"
@@ -449,6 +450,14 @@ dialectCanonicalizationPattern(TestDialectCanonicalizerOp op,
 
 void TestDialect::getCanonicalizationPatterns(
     RewritePatternSet &results, bool registerOperationCanonicalization) const {
+  // Operation canonicalization patterns
+  if (registerOperationCanonicalization) {
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "../test/lib/Dialect/Test/TestOpsDefs.cpp.inc"
+        >::insert(results);
+  }
+  
   results.add(&dialectCanonicalizationPattern);
 }
 
