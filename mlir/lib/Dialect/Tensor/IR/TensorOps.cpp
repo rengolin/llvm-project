@@ -4188,8 +4188,6 @@ struct FoldTensorCastProducerOp
 
 void TensorDialect::getCanonicalizationPatterns(
     RewritePatternSet &results, bool registerOperationCanonicalization) const {
-  results.add<FoldTensorCastProducerOp>(getContext());
-
   // Operation canonicalization patterns
   if (registerOperationCanonicalization) {
     CanonicalizationPatternList<
@@ -4197,6 +4195,9 @@ void TensorDialect::getCanonicalizationPatterns(
 #include "mlir/Dialect/Tensor/IR/TensorOps.cpp.inc"
         >::insert(results);
   }
+
+  // Manual rewrites
+  results.add<FoldTensorCastProducerOp>(getContext());
 }
 
 //===----------------------------------------------------------------------===//
