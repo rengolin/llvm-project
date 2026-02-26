@@ -69,5 +69,9 @@ void ArmSMEDialect::getCanonicalizationPatterns(
 #define GET_OP_LIST
 #include "mlir/Dialect/ArmSME/IR/ArmSMEIntrinsicOps.cpp.inc"
         >::insert(results);
+    CanonicalizationPatternList<
+#define GET_OP_LIST
+#include "mlir/Dialect/ArmSME/IR/ArmSMEOps.cpp.inc"
+        >::insert(results);
   }
 }
